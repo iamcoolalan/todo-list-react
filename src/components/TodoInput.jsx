@@ -58,6 +58,7 @@ const StyledAddTodoActionContainer = styled.div`
     font-size: 13px;
     color: var(--major);
     padding-right: 5px;
+    display: none;
   }
 
   &.active {
