@@ -1,4 +1,5 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { useState } from 'react';
 
 const dummyTodos = [
   {
@@ -24,11 +25,17 @@ const dummyTodos = [
 ];
 
 const TodoPage = () => {
+  const [inputValue, setInputValue] = useState('')
+
+  const handleOnChange = (value) => {
+    setInputValue(value)
+  }
+
   return (
     <div>
       TodoPage
       <Header />
-      <TodoInput />
+      <TodoInput inputValue={inputValue} onChange={handleOnChange}/>
       <TodoCollection todos={dummyTodos} />
       <Footer />
     </div>
