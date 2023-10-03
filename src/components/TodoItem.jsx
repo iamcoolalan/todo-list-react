@@ -100,14 +100,20 @@ const StyledTaskItem = styled.div`
   }
 `;
 
-const TodoItem = () => {
+const TodoItem = ({
+  todo,
+  onSave,
+  onDelete,
+  onToggleDone,
+  onChangeMode
+}) => {
   return (
     <StyledTaskItem>
       <div className="task-item-checked">
         <span className="icon icon-checked" />
       </div>
       <div className="task-item-body">
-        <span className="task-item-body-text">todo</span>
+        <span className="task-item-body-text">{todo.title}</span>
         <input className="task-item-body-input" />
       </div>
       <div className="task-item-action ">
