@@ -28,11 +28,11 @@ const TodoPage = () => {
   const [inputValue, setInputValue] = useState('')
   const [todos, setTodos] = useState(dummyTodos);
 
-  const handleOnChange = (value) => {
+  const handleChange = (value) => {
     setInputValue(value)
   }
 
-  const handleTodo = () => {
+  const handleAddTodo = () => {
     if (inputValue.length === 0) {
       return;
     }
@@ -51,14 +51,34 @@ const TodoPage = () => {
     setInputValue('');
   };
 
+  const handleKeyDown = () => {
+    if (inputValue.length === 0) {
+      return;
+    }
+
+    setTodos((prevTodos) => {
+      return [
+        ...prevTodos,
+        {
+          title: inputValue,
+          isDone: false,
+          id: Math.random() * 100,
+        },
+      ];
+    });
+
+    setInputValue('');
+  }
+
   return (
     <div>
       TodoPage
       <Header />
       <TodoInput
         inputValue={inputValue}
-        onChange={handleOnChange}
-        onAddTodo={handleTodo}
+        onChange={handleChange}
+        onAddTodo={handleAddTodo}
+        onKeyDown={handleKeyDown}
       />
       <TodoCollection todos={todos} />
       <Footer />
