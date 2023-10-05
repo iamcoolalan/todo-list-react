@@ -1,5 +1,5 @@
-import { checkPermission } from 'api/auth';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
+import { useAuth } from 'contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +32,7 @@ const TodoPage = () => {
 
   const navigate = useNavigate()
   const amount = todos.length
+  const { isAuthenticated } = useAuth()
 
   const handleChange = (value) => {
     setInputValue(value)
@@ -127,22 +128,10 @@ const TodoPage = () => {
   }
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken');
-
-      if (!authToken) {
-        navigate('/login');
-      }
-
-      const result = await checkPermission(authToken);
-
-      if (!result) {
-        navigate('/login');
-      }
-    };
-
-    checkTokenIsValid();
-  }, [navigate]);
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [navigate, isAuthenticated]);
 
   return (
     <div>

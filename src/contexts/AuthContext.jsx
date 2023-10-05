@@ -57,8 +57,8 @@ export const AuthProvider = ({children}) => {
         },
         register: async (data) => {
           const { success, authToken } = await register({
-            username: data.userName,
-            email: data.userEmail,
+            username: data.username,
+            email: data.email,
             password: data.password,
           });
 
@@ -77,7 +77,7 @@ export const AuthProvider = ({children}) => {
         },
         login: async (data) => {
           const { success, authToken } = await login({
-            username: data.userName,
+            username: data.username,
             password: data.password,
           });
 
