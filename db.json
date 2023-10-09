@@ -7,7 +7,7 @@
     },
     {
       "title": "Learn to create custom hooks",
-      "isDone": false,
+      "isDone": true,
       "id": 2
     },
     {
@@ -29,11 +29,6 @@
       "title": "123",
       "isDone": false,
       "id": 6
-    },
-    {
-      "title": "456",
-      "isDone": false,
-      "id": 7
     }
   ]
 }

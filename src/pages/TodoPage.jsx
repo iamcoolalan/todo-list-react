@@ -1,4 +1,4 @@
-import { createTodos, getTodos } from 'api/todos';
+import { createTodo, deleteTodo, getTodos, patchTodo } from 'api/todos';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useAuth } from 'contexts/AuthContext';
 import { useEffect, useState } from 'react';
@@ -45,9 +45,9 @@ const TodoPage = () => {
     }
 
     try {
-      const data = await createTodos({
+      const data = await createTodo({
         title: inputValue,
-        isDone: false
+        isDone: false,
       });
 
       setTodos((prevTodos) => {
@@ -74,7 +74,7 @@ const TodoPage = () => {
     }
 
     try {
-      const data = await createTodos({
+      const data = await createTodo({
         title: inputValue,
         isDone: false,
       });
@@ -97,18 +97,29 @@ const TodoPage = () => {
     }
   };
 
-  const handleToggleDone = (id) => {
-    setTodos((preTodos) => {
-       return preTodos.map((todo) => {
-         if (todo.id === id) {
-           return {
-             ...todo,
-             isDone: !todo.isDone,
-           };
-         }
-         return todo;
-       });
-    })
+  const handleToggleDone = async (id) => {
+    try {
+      const currentTodo = todos.find(todo => todo.id === id)
+
+      await patchTodo({
+        id,
+        isDone: !currentTodo.isDone
+      })
+
+      setTodos((preTodos) => {
+        return preTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: !todo.isDone,
+            };
+          }
+          return todo;
+        });
+      });
+    } catch (error) {
+      console.error('[Patch Todos Failed]:', error);
+    }
   }
 
   const handleChangeMode = ({ id, isEdit }) => {
@@ -126,26 +137,41 @@ const TodoPage = () => {
     })
   }
 
-  const handleSave = ({id, title}) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map(todo => {
-        if(todo.id === id) {
-          return {
-            ...todo,
-            title,
-            isEdit: false
-          }
-        }
+  const handleSave = async ({id, title}) => {
+    try {
+      await patchTodo({
+        id,
+        title
+      });
 
-        return todo
-      })
-    })
+      setTodos((prevTodos) => {
+        return prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              title,
+              isEdit: false,
+            };
+          }
+
+          return todo;
+        });
+      });
+    } catch (error) {
+      console.error('[Patch Todos Failed]:', error);
+    }
   }
 
-  const handleDelete = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.filter(todo => todo.id !== id)
-    })
+  const handleDelete = async (id) => {
+    try {
+      await deleteTodo(id)
+
+      setTodos((prevTodos) => {
+        return prevTodos.filter((todo) => todo.id !== id);
+      });
+    } catch (error) {
+      console.error('[Delete Todos Failed]:', error);
+    }
   }
 
   useEffect(() => {
