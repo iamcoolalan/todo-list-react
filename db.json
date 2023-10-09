@@ -1,5 +1,5 @@
 {
-  "todos":[
+  "todos": [
     {
       "title": "Learn react-router",
       "isDone": true,
@@ -19,6 +19,21 @@
       "title": "Learn to implement auth",
       "isDone": false,
       "id": 4
+    },
+    {
+      "title": "new todo",
+      "isDone": false,
+      "id": 5
+    },
+    {
+      "title": "123",
+      "isDone": false,
+      "id": 6
+    },
+    {
+      "title": "456",
+      "isDone": false,
+      "id": 7
     }
   ]
 }

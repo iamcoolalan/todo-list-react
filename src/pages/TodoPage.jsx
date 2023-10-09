@@ -1,3 +1,4 @@
+import { createTodos, getTodos } from 'api/todos';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useAuth } from 'contexts/AuthContext';
 import { useEffect, useState } from 'react';
@@ -38,43 +39,63 @@ const TodoPage = () => {
     setInputValue(value)
   }
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (inputValue.length === 0) {
       return;
     }
 
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          title: inputValue,
-          isDone: false,
-          id: Math.random() * 100,
-        },
-      ];
-    });
+    try {
+      const data = await createTodos({
+        title: inputValue,
+        isDone: false
+      });
 
-    setInputValue('');
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            title: data.title,
+            isDone: data.isDone,
+            id: data.id,
+            isEdit: false
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error('[Create Todos Failed]:', error)
+    }
   };
 
-  const handleKeyDown = () => {
+  const handleKeyDown = async () => {
     if (inputValue.length === 0) {
       return;
     }
 
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          title: inputValue,
-          isDone: false,
-          id: Math.random() * 100,
-        },
-      ];
-    });
+    try {
+      const data = await createTodos({
+        title: inputValue,
+        isDone: false,
+      });
 
-    setInputValue('');
-  }
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            title: data.title,
+            isDone: data.isDone,
+            id: data.id,
+            isEdit: false,
+          },
+        ];
+      });
+
+      setInputValue('');
+    } catch (error) {
+      console.error('[Create Todos Failed]:', error);
+    }
+  };
 
   const handleToggleDone = (id) => {
     setTodos((preTodos) => {
@@ -126,6 +147,25 @@ const TodoPage = () => {
       return prevTodos.filter(todo => todo.id !== id)
     })
   }
+
+  useEffect(() => {
+    const getTodosAsync = async () => {
+      try {
+        const todos = await getTodos();
+
+        setTodos(
+          todos.map((todo) => ({
+            ...todo,
+            isEdit: false,
+          })),
+        );
+      } catch (error) {
+        console.error('[Get Todos Failed]:', error);
+      }
+    };
+   
+    getTodosAsync();
+  }, [])
 
   useEffect(() => {
     if (!isAuthenticated) {
